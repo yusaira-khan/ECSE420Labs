@@ -5,8 +5,8 @@
 
 int main() {
 	// task: add 10 to each element of x
-	int N = 9;
-	int x[] = {0,1,2,3,4,5,6,7,8};
+	int N =100000 ;
+	int x[100000];
 
 	int i;
 	// print initial data
@@ -19,7 +19,7 @@ int main() {
 	int idx;
 	#pragma omp parallel for num_threads(4)
 	for (idx = 0; idx < N; idx++) {
-		printf("thread %d processed element %d of x\n", omp_get_thread_num(), idx);
+		//printf("thread %d processed element %d of x\n", omp_get_thread_num(), idx);
 		x[idx] += 10;
 	}
 
