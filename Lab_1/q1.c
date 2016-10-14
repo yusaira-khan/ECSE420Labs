@@ -27,19 +27,17 @@ void process(char* input_filename, char* output_filename,int threads)
 
   // process image
   
-  #pragma omp parallel for num_threads(threads) private(cell) schedule(dynamic,1)
-  
-    
-    for (unsigned i = 0; i < height; i++) {
+  #pragma omp parallel for num_threads(threads) private(cell) schedule(dynamic,1) 
+  for (unsigned i = 0; i < height; i++) {
   //for (int i = 0; i < height; i++) {
-
     for (unsigned j = 0; j < width; j++) { 
       cell = 4*width*i + 4*j;
-      
-      new_image[cell + 0] = rectify_byte(image[cell + 0]); // R
-      new_image[cell + 1] = rectify_byte(image[cell + 1]); // G
-      new_image[cell + 2] = rectify_byte(image[cell + 2]); // B
-      new_image[cell + 3] = rectify_byte(image[cell + 3]); // A
+      for (unsigned color = 0; color< 4; color++){
+        if (image[cell + color]<127)
+          new_image[cell + color]=127;
+        else 
+          new_image[cell + color]=image[cell + color];
+      }
     }
   }
 

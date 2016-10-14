@@ -10,7 +10,7 @@ void process(char* input_filename, char* output_filename)
 {
   unsigned error;
   unsigned char *image, *new_image;
-  unsigned width, height;
+  unsigned width, height,index;
   unsigned char clamped;
   float unclamped;
   
@@ -23,25 +23,32 @@ void process(char* input_filename, char* output_filename)
 
   // process image
   
+  //float (**nim)[4]=(float (**)[4])new_image;
+  //float (**im)[4]=(float (**)[4])image;
 
   for (int i = 1; i < height-1; i++) {
   for (int j = 1; j < width-1; j++) {  
-  for (int c =0; c< COLOR_CHANNELS; c++){
-    
-      unclamped =0;
-      for (int ii = 0; ii< w_side_size;ii++){
-      for (int jj = 0; jj<w_side_size;jj++){
-        //printf("%d %d %d %d\n",i,j,ii,jj );
-        //unclamped+=w[w_side_size-ii-1][w_side_size-jj-1]*  image[4*width*(i+ii-1) + 4*(j+jj-1) + c];
-        unclamped=0;
-      }
-      }
-      if (unclamped<0) clamped = 0;
-      else if (unclamped>255) clamped=255;
-      else clamped = (unsigned char) unclamped;
-      new_image[4*width*(i-1) + 4*(j-1) + c] = clamped; // R  
-  }
-  new_image[4*width*(i-1) + 4*(j-1) + 3]=image[4*width*(i-1) + 4*(j-1) + 3]     ;
+    index=4*width*(i-1) + 4*(j-1);
+
+    for (int c =0; c< COLOR_CHANNELS; c++){
+        unclamped = 0;
+
+        for (int ii = 0; ii< w_side_size;ii++){
+        for (int jj = 0; jj<w_side_size;jj++){
+          //printf("%d %d %d %d %d %d\n",i,j,ii,jj,c,image[4*width*(i+ii-1) + 4*(j+jj-1) + c] );
+          unclamped += w[ii][jj] *  image[index+4*width*(ii) + 4*(jj) + c];
+          //unclamped=0;
+        }
+        }
+        if (unclamped<=0) clamped = 0;
+        else if (unclamped>=255) clamped=255;
+        else clamped = (unsigned char) unclamped;
+
+        new_image[index+ c] = clamped; // R  
+        //nim[i-1][j-i][c]=clamped;
+    }
+  //new_image[index + 3]=image[index + 3];
+  //nim[i-1][j-1][3]=im[i-1][j-1][3];
   }
   }
 
