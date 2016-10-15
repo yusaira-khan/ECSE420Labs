@@ -26,12 +26,12 @@ void process(char* input_filename, char* output_filename,int threads)
 
   // process image
   
-  #pragma omp parallel for num_threads(threads) schedule(dynamic,1) 
+  #pragma omp parallel for num_threads(threads)  
 	for (unsigned i=0; i<width; i=i+2){
 		for (unsigned j=0; j<height; j=j+2){
-			for (unsigned color=0; color<4; color++){
-				#pragma omp critical
-				{
+			for (unsigned color=0; color<3; color++){
+	//			#pragma omp critical
+	//			{
   				unsigned char slice[4];
   				unsigned char pixel;
 				slice[0] = image[i*width*4 + j*4 + color];
@@ -40,8 +40,9 @@ void process(char* input_filename, char* output_filename,int threads)
 				slice[3] = image[(i+1)*width*4 + (j+1)*4 + color];
 				pixel = max_pool(slice);
 				new_image[i*width + j*2 + color] = pixel;
-				}
+		//		}
 			}			
+			new_image[i*width + j*2 + 3] = 255; //A
 
 		}
 	}
