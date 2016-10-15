@@ -12,7 +12,7 @@ void process(char* input_filename, char* output_filename, int threads)
 {
   unsigned error;
   unsigned char *image, *new_image;
-  unsigned width, height,index,new_index;
+  unsigned width, height;
 
 
   error = lodepng_decode32_file(&image, &width, &height, input_filename);
@@ -24,34 +24,33 @@ void process(char* input_filename, char* output_filename, int threads)
   //float (**nim)[4]=(float (**)[4])new_image;
   //float (**im)[4]=(float (**)[4])image;
 
-  #pragma omp parallel for num_threads(threads) schedule(dynamic, 1)
+  #pragma omp parallel for num_threads(threads) 
   for (int i = 1; i < height-1; i++) {
   for (int j = 1; j < width-1; j++) {  
-    index=4*width*(i-1) + 4*(j-1);
-    new_index = 4*(width-2) * (i-1) + 4 * (j-1);
+   unsigned index=4*width*(i-1) + 4*(j-1);
+   unsigned new_index = 4*(width-2) * (i-1) + 4 * (j-1);
+   for (int c =0; c< COLOR_CHANNELS; c++){
+	//#pragma omp critical
+	//{
+    	unsigned char clamped;
+    	float unclamped = 0;
 
-    for (int c =0; c< COLOR_CHANNELS; c++){
-	#pragma omp critical
-	{
-  	unsigned char clamped;
-  	float unclamped = 0;
+          for (int ii = 0; ii< w_side_size;ii++){
+          for (int jj = 0; jj<w_side_size;jj++){
+            //printf("%d %d %d %d %d %d\n",i,j,ii,jj,c,image[4*width*(i+ii-1) + 4*(j+jj-1) + c] );
+            unclamped += w[ii][jj] *  image[index + 4*width*(ii) + 4*(jj) + c];
+            //unclamped=0;
+          }
+          }
+          if (unclamped<=0) clamped = 0;
+          else if (unclamped>=255) clamped=255;
+          else clamped = (unsigned char) unclamped;
 
-        for (int ii = 0; ii< w_side_size;ii++){
-        for (int jj = 0; jj<w_side_size;jj++){
-          //printf("%d %d %d %d %d %d\n",i,j,ii,jj,c,image[4*width*(i+ii-1) + 4*(j+jj-1) + c] );
-          unclamped += w[ii][jj] *  image[index + 4*width*(ii) + 4*(jj) + c];
-          //unclamped=0;
-        }
-        }
-        if (unclamped<=0) clamped = 0;
-        else if (unclamped>=255) clamped=255;
-        else clamped = (unsigned char) unclamped;
-
-        new_image[new_index+ c] = clamped; // R  
-        //nim[i-1][j-i][c]=clamped;
-	}
+          new_image[new_index+ c] = clamped; // R  
+          //nim[i-1][j-i][c]=clamped;
+	//}
     }
-  new_image[new_index + 3]=image[index + 3];
+    new_image[new_index + 3]=image[index + 3];
   //nim[i-1][j-1][3]=im[i-1][j-1][3];
   }
   }
