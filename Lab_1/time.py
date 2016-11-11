@@ -1,6 +1,6 @@
 import os
 
-test_picture="pics/WA_-_Dry_Falls_-_Huge_Channel_v1.png"
+test_picture="pics/S4_E23_Lightning_shows_Prince_Huge.png"
 
 def run_test(file, prog,  num_threads):
 

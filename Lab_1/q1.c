@@ -27,7 +27,7 @@ void process(char* input_filename, char* output_filename,int threads)
 
   // process image
   
-  #pragma omp parallel for num_threads(threads) private(cell) schedule(dynamic,1) 
+  #pragma omp parallel for num_threads(threads) private(cell)  
   for (unsigned i = 0; i < height; i++) {
   //for (int i = 0; i < height; i++) {
     for (unsigned j = 0; j < width; j++) { 
