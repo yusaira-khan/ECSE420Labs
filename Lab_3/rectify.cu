@@ -39,8 +39,8 @@ int main(int argc, char ** argv){
 //	dim3 dimBlock();
 //	dim3 dimGrid();
 
-//	rectify<<<img_size/MAX_THREADS, MAX_THREADS>>>(d_out, d_in);
-	rectify<<<MAX_THREADS, img_size/MAX_THREADS>>>(d_out, d_in);
+	rectify<<<img_size/MAX_THREADS, MAX_THREADS>>>(d_out, d_in);
+//	rectify<<<MAX_THREADS, img_size/MAX_THREADS>>>(d_out, d_in);
 
 	int remainder = img_size%MAX_THREADS;
 
