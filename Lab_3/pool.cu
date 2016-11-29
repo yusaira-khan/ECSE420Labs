@@ -94,6 +94,8 @@ int main(int argc, char **argv){
 	
 	lodepng_encode32_file(output_filename, new_image, width/2, height/2);
 
+	cudaFree(d_in);
+	cudaFree(d_out);
 	free(image);
 	free(new_image);
 }
