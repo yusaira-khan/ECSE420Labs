@@ -11,7 +11,7 @@ __global__ void rectify(unsigned char *d_out, unsigned char *d_in){
 	d_out[index + 0] = d_in[index + 0] < 127 ? 127 : d_in[index + 0];
 	d_out[index + 1] = d_in[index + 1] < 127 ? 127 : d_in[index + 1];
 	d_out[index + 2] = d_in[index + 2] < 127 ? 127 : d_in[index + 2];
-	d_out[index + 3] = 225;
+	d_out[index + 3] = 255;
 }
 
 int main(int argc, char ** argv){
@@ -50,7 +50,7 @@ int main(int argc, char ** argv){
 		new_image[4*idx+0] = image[4*idx+0] < 127 ? 127 : image[4*idx+0];
 		new_image[4*idx+1] = image[4*idx+1] < 127 ? 127 : image[4*idx+1];
 		new_image[4*idx+2] = image[4*idx+2] < 127 ? 127 : image[4*idx+2];
-		new_image[4*idx+3] = 225;
+		new_image[4*idx+3] = 255;
 	}
 	
 	lodepng_encode32_file(output_filename, new_image, width, height);
